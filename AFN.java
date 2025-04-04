@@ -39,7 +39,7 @@ public class AFN {
     }
 
      //1. Crear AFN basico (con y sin rango como parametros del metodo)
-     public AFN crearAFNBasico(char s1, char s2){
+     public AFN crearAFNBasico(char s1, char s2, int id){
          AFN f = new AFN();
          Estado e1 = new Estado();
          Estado e2 = new Estado();
@@ -54,11 +54,11 @@ public class AFN {
              f.alfabeto.add(c);
          }
          f.estadosAceptacion.add(e2);
+         f.idAFN = id;
          f.estadosAFN.add(e1);
          f.estadosAFN.add(e2);
          
-         return f;
-        
+         return f;    
          
      }
      
@@ -99,8 +99,68 @@ public class AFN {
          return f;
      }
      
-    
-   /*
+    public AFN Concatenar(AFN f2) {
+       
+        // Agregar transiciones desde los estados de aceptación del AFN actual hacia los estados de f2.EdoInicial
+        for (Transicion t : f2.estadoInicial.transiciones) {
+            for (Estado e : this.estadosAceptacion) {
+                e.transiciones.add(t);
+                e.estadoAceptacion = false;
+            }
+        }
+        
+        this.estadosAFN.addAll(f2.estadosAFN);
+        this.estadosAceptacion.clear(); //eliminamos los estados de aceptacion hasta el momento
+        this.estadosAceptacion.addAll(f2.estadosAceptacion);
+        this.estadosAFN.remove(f2.estadoInicial);
+        this.alfabeto.addAll(f2.alfabeto);
+
+        for (char c : this.alfabeto) {
+            System.out.println(c);
+        }
+
+        System.out.println("Concatenado.");
+        
+
+        ConjuntoAFNs.remove(f2);
+        f2.limpiarAFN();
+
+        int i = 0;
+
+        System.out.println("Edo inicial: " + this.estadoInicial.IdEdo + ", Token: " + this.estadoInicial.token);
+        System.out.println("Edos de aceptación:");
+        
+        for (Estado estado : this.estadosAceptacion) {            
+            System.out.println(i + " .Estado ID: " + estado.IdEdo + ", Token: " + estado.token);
+
+            // Imprimir transiciones de cada estado
+            for (Transicion transicion : estado.transiciones) {
+                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.IdEdo);
+            }
+            i++;
+        }
+        i=0;
+        System.out.println("Demás edos:");
+        // Imprimir estados y sus tokens después de la unión
+        for (Estado estado : this.estadosAFN) {
+            System.out.println(i + " .Estado ID: " + estado.IdEdo + ", Token: " + estado.token);
+
+            // Imprimir transiciones de cada estado
+            for (Transicion transicion : estado.transiciones) {
+                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.IdEdo);
+            }
+            i++;
+        }
+
+    // Imprimir alfabeto
+    System.out.println("Alfabeto:");
+    for (char c : this.alfabeto) {
+        System.out.println("  " + c);
+    }
+        
+        return this;
+    }
+   
     public AFN opcional() {
         AFN f = new AFN();
         Estado e1 = new Estado();
@@ -117,12 +177,37 @@ public class AFN {
         e2.setEstadoAceptacion(true);
         f.estadoInicial = e1;
         f.alfabeto.addAll(this.alfabeto);
-        f.estados.addAll(this.estados);
-        f.estados.add(e1);
-        f.estados.add(e2);
+        f.estadosAFN.addAll(this.estadosAFN);
+        f.estadosAFN.add(e1);
+        f.estadosAFN.add(e2);
         f.estadosAceptacion.add(e2);
         
         return f;
     }
-*/
+
+     public AFN cerraduraKleene() {
+        this.cerraduraPositiva();
+        char Epsilon = SimbolosEspeciales.EPSILON;
+
+        for (Estado e : this.estadosAceptacion) {
+            this.estadoInicial.transiciones.add(new Transicion(Epsilon, e));
+        }
+
+        System.out.println("Cerradura *");
+
+        return this;
+    }
+
+    public AFN cerraduraPositiva() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void limpiarAFN() {
+        this.estadosAFN.clear();
+        this.alfabeto.clear();
+        this.estadosAceptacion.clear();
+        this.estadoInicial = null;
+        ConjuntoAFNs.remove(this);
+    }
+     
 }

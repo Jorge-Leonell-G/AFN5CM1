@@ -14,6 +14,9 @@ class Estado {
     
     Set<Transicion> transiciones = new HashSet<>();
     boolean estadoAceptacion;
+    //nuevos campos añadidos para el descenso recursivo (id y token)
+    String IdEdo;
+    String token;
     
     void agregarTransicion(Transicion t) {
         transiciones.add(t);
