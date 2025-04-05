@@ -1,35 +1,66 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package proyectoafn;
+
 import java.util.HashSet;
 import java.util.Set;
-import proyectoafn.Transicion;
-/**
- *
- * @author leone
- */
-class Estado {
-    
-    Set<Transicion> transiciones = new HashSet<>();
-    boolean estadoAceptacion;
-    //nuevos campos añadidos para el descenso recursivo (id y token)
-    String IdEdo;
-    String token;
-    
-    void agregarTransicion(Transicion t) {
+
+public class Estado {
+
+    // Transiciones asociadas a este estado
+    public Set<Transicion> transiciones = new HashSet<>();
+    public boolean estadoAceptacion;
+    public String idEdo;
+    public int token;
+
+    // Constructor que permite establecer un identificador para el estado
+    public Estado(String idEdo) {
+        this.idEdo = idEdo;
+        this.token = -1;  // Inicialmente sin token
+        this.estadoAceptacion = false; // Por defecto, no es estado de aceptación
+    }
+
+    // Constructor que también asigna un token
+    public Estado(String idEdo, int token) {
+        this.idEdo = idEdo;
+        this.token = token;
+        this.estadoAceptacion = false; // Por defecto, no es estado de aceptación
+    }
+
+    // Constructor por defecto
+    public Estado() {
+        this.idEdo = "Desconocido";  // o un valor por defecto
+        this.token = -1;
+        this.estadoAceptacion = false;
+    }
+
+    // Método para agregar una transición a este estado
+    public void agregarTransicion(Transicion t) {
         transiciones.add(t);
     }
 
-    void setEstadoAceptacion(boolean b) {
+    // Método para verificar si el estado es un estado de aceptación
+    public boolean esEstadoAceptacion() {
+        return this.estadoAceptacion;
+    }
+
+    public void setEstadoAceptacion(boolean estadoAceptacion) {
         this.estadoAceptacion = estadoAceptacion;
     }
-    /*
-    class Transiciones {
 
-        public Transiciones() {
-        }
+    public String getIdEdo() {
+        return this.idEdo;
     }
-    */
+
+    // Métodos getter y setter para el token
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
+    // Obtener las transiciones del estado
+    public Set<Transicion> getTransiciones() {
+        return transiciones;
+    }
 }

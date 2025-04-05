@@ -28,7 +28,7 @@ public class AFN {
    // Metodo constructor
     public AFN() {
         this.idAFN = 0;
-        this.estadoInicial = null;
+        this.estadoInicial = new Estado();
         this.estadosAFN = new HashSet<>();
         this.estadosAceptacion = new HashSet<>();
         this.alfabeto = new HashSet<>();
@@ -99,7 +99,7 @@ public class AFN {
          return f;
      }
      
-    public AFN Concatenar(AFN f2) {
+    public AFN concatenarAFNs (AFN f2) {
        
         // Agregar transiciones desde los estados de aceptación del AFN actual hacia los estados de f2.EdoInicial
         for (Transicion t : f2.estadoInicial.transiciones) {
@@ -127,15 +127,15 @@ public class AFN {
 
         int i = 0;
 
-        System.out.println("Edo inicial: " + this.estadoInicial.IdEdo + ", Token: " + this.estadoInicial.token);
+        System.out.println("Edo inicial: " + this.estadoInicial.idEdo + ", Token: " + this.estadoInicial.token);
         System.out.println("Edos de aceptación:");
         
         for (Estado estado : this.estadosAceptacion) {            
-            System.out.println(i + " .Estado ID: " + estado.IdEdo + ", Token: " + estado.token);
+            System.out.println(i + " .Estado ID: " + estado.idEdo + ", Token: " + estado.token);
 
             // Imprimir transiciones de cada estado
             for (Transicion transicion : estado.transiciones) {
-                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.IdEdo);
+                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.idEdo);
             }
             i++;
         }
@@ -143,11 +143,11 @@ public class AFN {
         System.out.println("Demás edos:");
         // Imprimir estados y sus tokens después de la unión
         for (Estado estado : this.estadosAFN) {
-            System.out.println(i + " .Estado ID: " + estado.IdEdo + ", Token: " + estado.token);
+            System.out.println(i + " .Estado ID: " + estado.idEdo + ", Token: " + estado.token);
 
             // Imprimir transiciones de cada estado
             for (Transicion transicion : estado.transiciones) {
-                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.IdEdo);
+                System.out.println("   Transición: " + transicion.simboloSup + " -> Estado ID: " + transicion.destino.idEdo);
             }
             i++;
         }
@@ -199,9 +199,43 @@ public class AFN {
     }
 
     public AFN cerraduraPositiva() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        AFN f = new AFN();
 
+        Estado nuevoInicial = new Estado();
+        Estado nuevoFinal = new Estado();
+
+        char epsilon = SimbolosEspeciales.EPSILON;
+
+        // Transición de nuevo inicial al estado inicial del AFN actual
+        nuevoInicial.transiciones.add(new Transicion(epsilon, this.estadoInicial));
+
+        // Transición de los estados de aceptación al estado inicial (ciclo)
+        for (Estado e : this.estadosAceptacion) {
+            e.transiciones.add(new Transicion(epsilon, this.estadoInicial));
+            e.transiciones.add(new Transicion(epsilon, nuevoFinal));
+            e.estadoAceptacion = false;
+        }
+
+        nuevoFinal.estadoAceptacion = true;
+
+        f.estadoInicial = nuevoInicial;
+        f.estadosAceptacion.add(nuevoFinal);
+
+        // Copiamos todos los estados del AFN original
+        f.estadosAFN.addAll(this.estadosAFN);
+
+        // Añadimos los nuevos estados
+        f.estadosAFN.add(nuevoInicial);
+        f.estadosAFN.add(nuevoFinal);
+
+        // Copiamos el alfabeto
+        f.alfabeto.addAll(this.alfabeto);
+
+        System.out.println("Cerradura positiva aplicada.");
+
+        return f;
+    }
+    
     private void limpiarAFN() {
         this.estadosAFN.clear();
         this.alfabeto.clear();
