@@ -95,14 +95,14 @@ public class menu {
                 }
                 int id = 0; // ID único para cada AFN creado
                 //afn1 = new AFN(); // Reiniciar instancia si es necesario
-                afn1.crearAFNBasico(simbolo, simbolo, id);
+                afn1.crearAFNBasico(simbolo);
 
                 // Datos adicionales
                 String estadoInicial = "q0";
                 String estadoFinal = "qF"; // Estado final arbitrario
                 List<Transicion> transiciones = new ArrayList<>();
-                transiciones.add(new Transicion('a', 'b', new Estado("q1")));  // Ejemplo de transición
-                transiciones.add(new Transicion('b', 'c', new Estado("qF"))); // Otra transición
+                transiciones.add(new Transicion('a', 'b', new Estado()));  // Ejemplo de transición
+                transiciones.add(new Transicion('b', 'c', new Estado())); // Otra transición
 
                 Set<Character> alfabeto = new HashSet<>(Arrays.asList('a', 'b')); // Ejemplo de alfabeto
                 String fechaCreacion = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -122,7 +122,7 @@ public class menu {
                     // Escribir las transiciones
                     writer.write("Transiciones:\n");
                     for (Transicion t : transiciones) {
-                        writer.write("  " + t.simbolo + " -> " + t.destino.getIdEdo() + "\n");
+                        writer.write("  " + t.simboloInf + " -> " + t.edo.getIdEdo() + "\n");
                     }
 
                     writer.write("Alfabeto: " + alfabeto.toString() + "\n");
@@ -135,7 +135,7 @@ public class menu {
                 // Graficar el AFN y generar la imagen (en formato PNG)
                 try {
                     String rutaImagen = Graph.graficarAFN(afn1, String.valueOf(simbolo), graphPath);
-                    resultArea.setText("AFN básico creado con símbolo '" + simbolo + "' y guardado en " + afnFile.getAbsolutePath() + "\nImagen generada en: " + rutaImagen);
+                    resultArea.setText("AFN básico creado con símbolo '" + simbolo + "' y guardado en " + afnFile.getAbsolutePath() + "\nImagen generada en: " + graphPath);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, "Error al generar la imagen del AFN: " + ex.getMessage());
                 }

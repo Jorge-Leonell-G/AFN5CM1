@@ -1,66 +1,118 @@
 package proyectoafn;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class Estado {
 
-    // Transiciones asociadas a este estado
-    public Set<Transicion> transiciones = new HashSet<>();
-    public boolean estadoAceptacion;
-    public String idEdo;
-    public int token;
-
-    // Constructor que permite establecer un identificador para el estado
-    public Estado(String idEdo) {
-        this.idEdo = idEdo;
-        this.token = -1;  // Inicialmente sin token
-        this.estadoAceptacion = false; // Por defecto, no es estado de aceptación
+    public int idEdo;
+    private HashSet<Estado> edos = new HashSet<Estado>(); 
+    HashSet<Transicion> transiciones = new HashSet<>();
+    boolean edoAceptacion;
+    int token;
+    private static int contadorIdEdo = 0;
+    
+    //getters y setters
+    public int getIdEdo(){
+        return this.idEdo;
+    }
+    
+    public void setIdEdo(int idEstado){
+        this.idEdo = idEstado;
+    }
+    
+    public HashSet<Estado> getEdos(){
+        return this.edos;
     }
 
-    // Constructor que también asigna un token
-    public Estado(String idEdo, int token) {
+    public void setEdos(HashSet<Estado> Edos){
+        this.edos = Edos;
+    }
+    
+    public HashSet<Transicion> getTransiciones(){
+        return this.transiciones;
+    }
+
+    public void setTransiciones(Transicion t){
+        this.transiciones.add(t);
+    }
+
+    public boolean getEdoAceptacion(){
+        return this.edoAceptacion;
+    }
+
+    public void setEdoAceptacion(boolean EdoAcept){
+        this.edoAceptacion = EdoAcept;
+    }
+
+    public int getToken(){
+        return this.token;
+    }
+
+    public void setToken(int Token){
+        this.token = Token;
+    }
+    
+    //Constructores
+    
+    //Constructor base
+    public Estado() {
+        this.idEdo = contadorIdEdo++;
+        this.edos = new HashSet<>();
+        this.transiciones.clear();
+        this.edoAceptacion = false;
+        this.token = -1;
+    }
+    
+    //Constructores adicionales
+    public Estado(boolean edoAcept, int Token){
+        this.idEdo = contadorIdEdo++;
+        this.edoAceptacion = edoAcept;
+        this.token = Token;
+    }
+    
+    public Estado(Transicion t, boolean EdoAcept, int Token){
+        this.idEdo = contadorIdEdo++;
+        this.edoAceptacion = EdoAcept;
+        this.token = Token;
+        this.transiciones.add(t);
+    }
+
+    public Estado(boolean EdoAcept, int Token, HashSet<Estado> Edos){
+        this.idEdo = contadorIdEdo++;
+        this.edoAceptacion = EdoAcept;
+        this.token = Token;
+        this.edos = Edos;
+    }
+    
+    
+    /*
+    public Estado(int idEdo) {
+        this.idEdo = idEdo;
+        this.token = -1;
+        this.edoAceptacion = false;
+    }
+
+    public Estado(int idEdo, int token) {
         this.idEdo = idEdo;
         this.token = token;
-        this.estadoAceptacion = false; // Por defecto, no es estado de aceptación
+        this.edoAceptacion = false;
     }
-
-    // Constructor por defecto
-    public Estado() {
-        this.idEdo = "Desconocido";  // o un valor por defecto
-        this.token = -1;
-        this.estadoAceptacion = false;
-    }
-
-    // Método para agregar una transición a este estado
+    
     public void agregarTransicion(Transicion t) {
         transiciones.add(t);
     }
-
-    // Método para verificar si el estado es un estado de aceptación
-    public boolean esEstadoAceptacion() {
-        return this.estadoAceptacion;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Estado)) return false;
+        Estado otro = (Estado) obj;
+        return this.idEdo.equals(otro.idEdo);
     }
 
-    public void setEstadoAceptacion(boolean estadoAceptacion) {
-        this.estadoAceptacion = estadoAceptacion;
+    @Override
+    public int hashCode() {
+        return idEdo.hashCode();
     }
-
-    public String getIdEdo() {
-        return this.idEdo;
-    }
-
-    // Métodos getter y setter para el token
-    public int getToken() {
-        return token;
-    }
-
-    public void setToken(int token) {
-        this.token = token;
-    }
-
-    // Obtener las transiciones del estado
-    public Set<Transicion> getTransiciones() {
-        return transiciones;
-    }
+    */
 }
