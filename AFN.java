@@ -98,7 +98,7 @@ public class AFN {
     
     //----- OPERACIONES DEL AFN -----
     //crear AFN basico con el ingreso de un solo simbolo
-    public AFN crearAFNBasico(char s){
+    public AFN crearAFNBasico(char s, int id){
         Estado e1 = new Estado();
         Estado e2 = new Estado();
         Transicion t = new Transicion(s,e2);
@@ -116,25 +116,31 @@ public class AFN {
         return this;
     }
 
-    public AFN crearAFNBasico(char s1, char s2) {
-        //AFN f = new AFN();
+    public AFN crearAFNBasico(char s1, char s2, int id) {
+        AFN f = new AFN();
         Estado e1 = new Estado();
         Estado e2 = new Estado();
         e1.transiciones.add(new Transicion(s1,s2,e2));
         e2.edoAceptacion = true;
-        edoInicial = e1;
+        f.edoInicial = e1;
         
-        for(char c = s1; c <= s2; c++){
+        //condicion para que s2 siempre sea mayor a s1
+        if((int) s2 >= (int) s1){
+           for(char c = s1; c <= s2; c++){
             alfabeto.add(c);
-        }
+            } 
+        }else{
+            throw new IllegalArgumentException("El rango especificado es invalido: " + s1 + "-" + s2);
+        } 
 
-        edosAceptacion.add(e2);
-        //f.idAFN = id;
-        edosAFN.add(e1);
-        edosAFN.add(e2);
+        f.edosAceptacion.add(e2);
+        f.idAFN = id;
+        f.edosAFN.add(e1);
+        f.edosAFN.add(e2);
         AFNUnionLex = false;
+        ConjuntoAFNs.add(f);
 
-        return this;
+        return f;
     }
     
     public AFN unirAFNs(AFN f2) {

@@ -95,7 +95,7 @@ public class menu {
                 }
                 int id = 0; // ID único para cada AFN creado
                 //afn1 = new AFN(); // Reiniciar instancia si es necesario
-                afn1.crearAFNBasico(simbolo);
+                afn1.crearAFNBasico(simbolo, id);
 
                 // Datos adicionales
                 String estadoInicial = "q0";
